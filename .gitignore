@@ -21,3 +21,6 @@ __MACOSX
 # Godot 4+ specific ignores
 .godot/
 /Export
+
+#project ignores
+project_time_traker.json

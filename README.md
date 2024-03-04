@@ -8,7 +8,7 @@ A small editor widget which provides basic functions for tracking your time with
 
 ![Plugin preview](/images/preview-1.png)
 
-Developed in and tested against Godot 4.1.1.
+Developed in and tested against Godot 4.2.1.
 
 ## Godot Time Traker VS Project Time Tracker
 - No session
