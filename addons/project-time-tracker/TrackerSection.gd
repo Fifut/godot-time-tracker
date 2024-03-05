@@ -67,7 +67,8 @@ func _update_elapsed_time() -> void:
 	if (!is_inside_tree()):
 		return
 	
-	elapsed_time_label.text = Time.get_time_string_from_unix_time(elapsed_time)
+	var days = floori(elapsed_time) / 60 / 60 / 24
+	elapsed_time_label.text = str(days) + "d - " + Time.get_time_string_from_unix_time(elapsed_time)
 
 
 func _on_clear_button_pressed():

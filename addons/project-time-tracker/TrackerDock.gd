@@ -64,7 +64,8 @@ func _process(delta: float) -> void:
 			time_elapsed += _tracker_sections[section]
 	
 	_tracker_sections["Editor"] = time_elapsed
-	status_value_label.text = "Working for " + Time.get_time_string_from_unix_time(_tracker_sections["Editor"])
+	var days = floori(_tracker_sections["Editor"]) / 60 / 60 / 24
+	status_value_label.text = "Working for: " + str(days) + "d - " + Time.get_time_string_from_unix_time(_tracker_sections["Editor"])
 
 
 # Helpers
@@ -126,7 +127,9 @@ func _pause_tracking() -> void:
 	if (_create_section(_tracker_main_view)):
 		var elapsed_time = Time.get_unix_time_from_system() - _tracker_started
 		_tracker_sections[_tracker_main_view] += elapsed_time
-	status_value_label.text = "Pause (" + Time.get_time_string_from_unix_time(_tracker_sections["Editor"]) + ")"
+	
+	var days = floori(_tracker_sections["Editor"]) / 60 / 60 / 24
+	status_value_label.text = "Pause (" + str(days) + "d - " + Time.get_time_string_from_unix_time(_tracker_sections["Editor"]) + ")"
 
 
 # Properties
