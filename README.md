@@ -15,10 +15,12 @@ Developed in and tested against Godot 4.2.1.
 - Start when project is loaded
 - Graphs shows the percentages of sections
 - Timer are saved every time a scene or script are saved
+- Timer stops after 5 min of inactivity and resumes automatically (AFK management)
 
 ## Knows issues
-:heavy_exclamation_mark: Not work with floting windows
-:heavy_exclamation_mark: AFK can not handle floting windows
+:heavy_exclamation_mark: Not work with floating windows
+
+:heavy_exclamation_mark: AFK can not handle floating windows
 
 ## Installation
 Clone this repository or download it as ZIP. You only need to put `addons/project-time-tracker` folder inside your project folder. ZIP already has only necessary files.
