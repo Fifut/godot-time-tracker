@@ -2,13 +2,24 @@
 extends EditorPlugin
 
 const STORED_SECTIONS_PATH : String = "res://project_time_traker.json"
+const AFK_TIMEOUT : float = 300.0
 
 var _dock_instance : Control
+var _timer_afk : Timer
+
+var _main_screen : String = "3D"
 
 
 func _enter_tree():
+	_timer_afk = Timer.new()
+	_timer_afk.wait_time = AFK_TIMEOUT
+	_timer_afk.autostart = true
+	_timer_afk.one_shot = true
+	_timer_afk.timeout.connect(_on_timer_afk_timeout)
+	add_child(_timer_afk)
+	
 	_dock_instance = preload("res://addons/project-time-tracker/TrackerDock.tscn").instantiate()
-	_dock_instance.name = "ProjectTimeTracker"
+	_dock_instance.name = "Project Time Tracker"
 	add_control_to_dock(EditorPlugin.DOCK_SLOT_RIGHT_BL, _dock_instance)
 	
 	_load_sections()
@@ -77,3 +88,26 @@ func _store_sections() -> void:
 func _on_main_screen_changed(main_screen: String) -> void:
 	if (_dock_instance && is_instance_valid(_dock_instance)):
 		_dock_instance.set_main_view(main_screen)
+		_main_screen = main_screen
+
+
+func _on_timer_afk_timeout() -> void:
+	if (_dock_instance && is_instance_valid(_dock_instance)):
+		_dock_instance.set_main_view("AFK")
+
+
+func _input(event):
+	if (_dock_instance && is_instance_valid(_dock_instance)):
+		if event:
+			_dock_instance.set_main_view(_main_screen)
+			_timer_afk.start()
+
+
+func _process(delta):
+	if (_dock_instance && is_instance_valid(_dock_instance)):
+		for id in DisplayServer.get_window_list():
+			if DisplayServer.window_is_focused(id):
+				return
+				
+		_dock_instance.set_main_view("External")
+		_timer_afk.stop()

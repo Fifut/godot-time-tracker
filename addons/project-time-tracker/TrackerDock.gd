@@ -13,11 +13,9 @@ extends Control
 @onready var clear_confirm_dialog : ConfirmationDialog = $ClearConfirmDialog
 @onready var clear_section_confirm_dialog : ConfirmationDialog = $ClearSectionConfirmDialog
 @onready var timer_update : Timer = $TimerUpdate
-@onready var timer_afk = $TimerAFK
 
 
 # Private properties
-var _afk : bool = false
 var _active_tracking : bool = false
 var _tracker_started : float = 0.0
 var _tracker_main_view : String = ""
@@ -29,6 +27,8 @@ var _section_colors : Dictionary = {
 	"3D": Color.CORAL,
 	"Script": Color.YELLOW,
 	"AssetLib": Color.MEDIUM_SEA_GREEN,
+	"External": Color.MEDIUM_PURPLE,
+	"AFK": Color.GRAY,
 	"default": Color.WHITE
 }
 
@@ -48,7 +48,6 @@ func _ready() -> void:
 	clear_confirm_dialog.confirmed.connect(_on_clear_records_confirmed)
 	clear_section_confirm_dialog.confirmed.connect(_on_clear_section_confirmed)
 	timer_update.timeout.connect(_on_timer_update_timeout)
-	timer_afk.timeout.connect(_on_timer_afk_timeout)
 	
 	_tracker_started = Time.get_unix_time_from_system()
 	
@@ -63,20 +62,12 @@ func _process(delta: float) -> void:
 	
 	var time_elapsed = 0.0
 	for section in _tracker_sections:
-		if section != "Editor":
+		if section != "Editor" and section != "AFK":
 			time_elapsed += _tracker_sections[section]
 	
 	_tracker_sections["Editor"] = time_elapsed
 	var days = floori(_tracker_sections["Editor"]) / 60 / 60 / 24
 	status_value_label.text = "Working for: " + str(days) + "d - " + Time.get_time_string_from_unix_time(_tracker_sections["Editor"])
-
-
-func _input(event):
-	if event and _afk:
-		_no_more_afk()
-		timer_afk.start()
-	elif event:
-		timer_afk.start()
 
 
 # Helpers
@@ -136,16 +127,6 @@ func _pause_tracking() -> void:
 	_set_active_tracking(false)
 	_disable_tracking("Pause")
 
-func _no_more_afk() -> void:
-	_afk = false
-	_set_active_tracking(true)
-	_tracker_started = Time.get_unix_time_from_system()
-
-func _on_timer_afk_timeout() -> void:
-	if _active_tracking:
-		_afk = true
-		_set_active_tracking(false)
-		_disable_tracking("AFK")
 
 func _disable_tracking(reason : String) -> void:
 	if (_create_section(_tracker_main_view)):
@@ -174,10 +155,7 @@ func set_main_view(view_name: String) -> void:
 func _set_active_tracking(tracking: bool) -> void:
 	_active_tracking = tracking
 	
-	if (_afk):
-		pause_button.disabled = true
-		resume_button.disabled = true
-	elif (_active_tracking):
+	if (_active_tracking):
 		pause_button.disabled = false
 		resume_button.disabled = true
 	else:
@@ -187,7 +165,7 @@ func _set_active_tracking(tracking: bool) -> void:
 
 func restore_tracked_sections(sections : Dictionary) -> void:
 	for section in sections:
-		if (section != "Editor"):
+		if (section != "Editor" and section != "AFK"):
 			_create_section(section)
 		_tracker_sections[section] = sections[section]
 	_update_sections()
