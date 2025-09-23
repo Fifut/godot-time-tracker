@@ -26,6 +26,7 @@ var _section_colors : Dictionary = {
 	"2D": Color.DEEP_SKY_BLUE,
 	"3D": Color.CORAL,
 	"Script": Color.YELLOW,
+	"Game": Color.FIREBRICK,
 	"AssetLib": Color.MEDIUM_SEA_GREEN,
 	"External": Color.MEDIUM_PURPLE,
 	"AFK": Color.GRAY,

@@ -8,6 +8,7 @@ var _dock_instance : Control
 var _timer_afk : Timer
 
 var _main_screen : String = "3D"
+var _focus_lost : bool = false
 
 
 func _enter_tree():
@@ -107,7 +108,11 @@ func _process(delta):
 	if (_dock_instance && is_instance_valid(_dock_instance)):
 		for id in DisplayServer.get_window_list():
 			if DisplayServer.window_is_focused(id):
+				if _focus_lost:
+					_dock_instance.set_main_view(_main_screen)
+					_focus_lost = false
 				return
 				
 		_dock_instance.set_main_view("External")
 		_timer_afk.stop()
+		_focus_lost = true
