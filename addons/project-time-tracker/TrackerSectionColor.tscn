@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bi6q1vpo6pn0i"]
 
-[ext_resource type="Script" path="res://addons/project-time-tracker/TrackerSectionColor.gd" id="1_t3kj1"]
+[ext_resource type="Script" uid="uid://pgmahsxkjd11" path="res://addons/project-time-tracker/TrackerSectionColor.gd" id="1_t3kj1"]
 
 [node name="TrackerSectionColor" type="ColorRect"]
 anchors_preset = 15

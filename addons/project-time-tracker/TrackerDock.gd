@@ -67,7 +67,8 @@ func _process(delta: float) -> void:
 	
 	_tracker_sections["Editor"] = time_elapsed
 	var days = floori(_tracker_sections["Editor"]) / 60 / 60 / 24
-	status_value_label.text = "Working for: " + str(days) + "d - " + Time.get_time_string_from_unix_time(_tracker_sections["Editor"])
+	var hours = floori(_tracker_sections["Editor"]) / 60 / 60
+	status_value_label.text = "Working for: " + str(days) + "d - " + Time.get_time_string_from_unix_time(_tracker_sections["Editor"]) + " (" + str(hours) + "h)"
 
 
 # Helpers
@@ -133,7 +134,8 @@ func _disable_tracking(reason : String) -> void:
 		var elapsed_time = Time.get_unix_time_from_system() - _tracker_started
 		_tracker_sections[_tracker_main_view] += elapsed_time
 		var days = floori(_tracker_sections["Editor"]) / 60 / 60 / 24
-		status_value_label.text = reason + " (" + str(days) + "d - " + Time.get_time_string_from_unix_time(_tracker_sections["Editor"]) + ")"
+		var hours = floori(_tracker_sections["Editor"]) / 60 / 60
+		status_value_label.text = reason + ": " + str(days) + "d - " + Time.get_time_string_from_unix_time(_tracker_sections["Editor"]) + " (" + str(hours) + "h)"
 
 
 
