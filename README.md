@@ -12,22 +12,22 @@ Developed in and tested against Godot 4.4
 
 ## Update
 
-#v2.0.4
+### v2.0.4
 - Gogot 4.4
 - Add section for Game
 - Add total hours in main timer
 - Fix: Popup menus count as “external” [#5](https://github.com/Fifut/godot-time-tracker/issues/5)
 
-#v2.0.3
+### v2.0.3
 - AFK refactor
 - Add sections for AFK and External
 [#2](https://github.com/Fifut/godot-time-tracker/issues/2)
 [#3](https://github.com/Fifut/godot-time-tracker/issues/3)
 
-#v2.0.2
+### v2.0.2
 - AFK management
 
-#v2.0.1
+### v2.0.1
 - Days management to fix hours overflow
 
 
