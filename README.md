@@ -12,6 +12,9 @@ Developed in and tested against Godot 4.4
 
 ## Update
 
+### v2.0.5
+- Fix: Counts being in the embeded game mode as 'external' [#4](https://github.com/Fifut/godot-time-tracker/issues/4)
+
 ### v2.0.4
 - Gogot 4.4
 - Add section for Game
@@ -44,8 +47,6 @@ Developed in and tested against Godot 4.4
 :heavy_exclamation_mark: Floating windows count as selected workspace in the main window.
 
 :heavy_exclamation_mark: AFK can not handle floating windows and external section
-
-:heavy_exclamation_mark: Counts being in the embeded game mode as 'external' [#4](https://github.com/Fifut/godot-time-tracker/issues/4)
 
 ## Installation
 Clone this repository or download it as ZIP. You only need to put `addons/project-time-tracker` folder inside your project folder. ZIP already has only necessary files.
