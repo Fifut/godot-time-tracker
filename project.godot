@@ -23,6 +23,7 @@ enabled=PackedStringArray("res://addons/project-time-tracker/plugin.cfg")
 
 sections/show_sections=true
 sections/show_graphs=true
+afk/afk_timer=10
 
 [rendering]
 

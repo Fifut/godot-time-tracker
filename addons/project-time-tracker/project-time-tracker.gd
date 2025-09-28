@@ -2,7 +2,6 @@
 extends EditorPlugin
 
 const STORED_SECTIONS_PATH : String = "res://project_time_traker.json"
-const AFK_TIMEOUT : float = 300.0
 
 var _dock_instance : Control
 var _timer_afk : Timer
@@ -19,7 +18,6 @@ func _enter_tree():
 			"name": key,
 			"type": TYPE_BOOL,
 			"hint": PROPERTY_HINT_NONE,
-			"hint_string": "Show or hide sections"
 		})
 	
 	key = "project_time_traker/sections/show_graphs"
@@ -29,11 +27,19 @@ func _enter_tree():
 			"name": key,
 			"type": TYPE_BOOL,
 			"hint": PROPERTY_HINT_NONE,
-			"hint_string": "Show or hide grap"
+		})
+		
+	key = "project_time_traker/afk/afk_timer"
+	if not ProjectSettings.has_setting(key):
+		ProjectSettings.set_setting(key, 300)
+		ProjectSettings.add_property_info({
+			"name": key,
+			"type": TYPE_INT,
+			"hint": PROPERTY_HINT_NONE,
 		})
 		
 	_timer_afk = Timer.new()
-	_timer_afk.wait_time = AFK_TIMEOUT
+	_timer_afk.wait_time = ProjectSettings.get_setting("project_time_traker/afk/afk_timer", 300)
 	_timer_afk.autostart = true
 	_timer_afk.one_shot = true
 	_timer_afk.timeout.connect(_on_timer_afk_timeout)
@@ -48,6 +54,12 @@ func _enter_tree():
 	main_screen_changed.connect(_on_main_screen_changed)
 	get_editor_interface().set_main_screen_editor("3D")
 
+
+func _ready() -> void:
+	ProjectSettings.settings_changed.connect(
+	func():
+		_timer_afk.wait_time = ProjectSettings.get_setting("project_time_traker/afk/afk_timer", 300)
+	)
 
 func _exit_tree():
 	remove_control_from_docks(_dock_instance)

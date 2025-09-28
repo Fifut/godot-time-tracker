@@ -17,6 +17,7 @@ Developed in and tested against Godot 4.4
 - Mono font
 - Total hours for sections
 - Add project settings to show/hide sections and graphs
+- Add project settings to define AFK timer (in seconds)
 
 ### v2.0.4
 - Gogot 4.4
@@ -38,12 +39,13 @@ Developed in and tested against Godot 4.4
 
 
 
-## Godot Time Traker VS Project Time Tracker
+## Godot Time Traker features (added or modified compared to Project Time Tracker)
 - No session
 - Start when project is loaded
 - Graphs shows the percentages of sections
 - Timer are saved every time a scene or script are saved
 - Timer stops after 5 min of inactivity and resumes automatically (AFK management)
+	Editable in project settings
 - When godot editor is not focused, time is count as External. For users that use external code editor
 
 ## Knows issues
