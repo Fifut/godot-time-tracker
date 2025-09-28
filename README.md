@@ -39,7 +39,7 @@ Developed in and tested against Godot 4.4
 
 
 
-## Godot Time Traker features (added or modified compared to Project Time Tracker)
+## Godot Time Tracker features (added or modified compared to Project Time Tracker)
 - No session
 - Start when project is loaded
 - Graphs shows the percentages of sections
