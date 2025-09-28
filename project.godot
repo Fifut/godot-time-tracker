@@ -19,6 +19,11 @@ config/icon="res://addons/project-time-tracker/icon.png"
 
 enabled=PackedStringArray("res://addons/project-time-tracker/plugin.cfg")
 
+[project_time_traker]
+
+sections/show_sections=true
+sections/show_graphs=true
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"

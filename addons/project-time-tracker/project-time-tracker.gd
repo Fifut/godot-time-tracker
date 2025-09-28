@@ -12,6 +12,26 @@ var _focus_lost : bool = false
 
 
 func _enter_tree():
+	var key = "project_time_traker/sections/show_sections"
+	if not ProjectSettings.has_setting(key):
+		ProjectSettings.set_setting(key, true)
+		ProjectSettings.add_property_info({
+			"name": key,
+			"type": TYPE_BOOL,
+			"hint": PROPERTY_HINT_NONE,
+			"hint_string": "Show or hide sections"
+		})
+	
+	key = "project_time_traker/sections/show_graphs"
+	if not ProjectSettings.has_setting(key):
+		ProjectSettings.set_setting(key, true)
+		ProjectSettings.add_property_info({
+			"name": key,
+			"type": TYPE_BOOL,
+			"hint": PROPERTY_HINT_NONE,
+			"hint_string": "Show or hide grap"
+		})
+		
 	_timer_afk = Timer.new()
 	_timer_afk.wait_time = AFK_TIMEOUT
 	_timer_afk.autostart = true

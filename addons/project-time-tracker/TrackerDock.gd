@@ -23,6 +23,8 @@ var _tracker_started : float = 0.0
 var _tracker_main_view : String = ""
 var _tracker_sections : Dictionary = {}
 var _section_to_remove : String = ""
+var _show_sections : bool = true
+var _show_graphs : bool = true
 
 var _section_colors : Dictionary = {
 	"2D": Color.DEEP_SKY_BLUE,
@@ -41,6 +43,12 @@ var _section_colors : Dictionary = {
 
 
 func _ready() -> void:
+	ProjectSettings.settings_changed.connect(
+		func():
+			_show_sections = ProjectSettings.get_setting("project_time_traker/sections/show_sections", true)
+			_show_graphs = ProjectSettings.get_setting("project_time_traker/sections/show_graphs", true)
+	)
+	
 	_update_theme()
 	
 	section_graph.section_colors = _section_colors
@@ -60,6 +68,9 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	section_list.visible = _show_sections
+	section_graph.visible = _show_graphs
+	
 	if (!_active_tracking):
 		return
 	
