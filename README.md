@@ -45,8 +45,10 @@ Developed in and tested against Godot 4.4
 - Graphs shows the percentages of sections
 - Timer are saved every time a scene or script are saved
 - Timer stops after 5 min of inactivity and resumes automatically (AFK management)
-	Editable in project settings
+	- Editable in project settings
 - When godot editor is not focused, time is count as External. For users that use external code editor
+- Sections and graphs can be hide separately
+	- Editable in project settings
 
 ## Knows issues
 :heavy_exclamation_mark: Floating windows count as selected workspace in the main window.
