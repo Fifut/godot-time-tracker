@@ -14,6 +14,8 @@ Developed in and tested against Godot 4.4
 
 ### v2.0.5
 - Fix: Counts being in the embeded game mode as 'external' [#4](https://github.com/Fifut/godot-time-tracker/issues/4)
+- Mono font
+- Total hours for sections
 
 ### v2.0.4
 - Gogot 4.4

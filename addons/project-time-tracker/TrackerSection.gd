@@ -7,6 +7,7 @@ signal on_clear_button_pressed(section_name)
 @onready var icon_texture : TextureRect = $Information/IconContainer/Icon
 @onready var name_label : Label = $Information/NameLabel
 @onready var elapsed_time_label : Label = $Information/ElapsedLabel
+@onready var elapsed_hours_label: Label = $Information/HoursLabel
 @onready var clear_button : Button = $Information/ClearButton
 
 # Public properties
@@ -69,7 +70,9 @@ func _update_elapsed_time() -> void:
 	
 	var days = floori(elapsed_time) / 60 / 60 / 24
 	elapsed_time_label.text = str(days) + "d - " + Time.get_time_string_from_unix_time(elapsed_time)
-
+	
+	var hours = floori(elapsed_time) / 60 / 60
+	elapsed_hours_label.text = "(" + str(hours) + "h)"
 
 func _on_clear_button_pressed():
 	on_clear_button_pressed.emit(section_name)

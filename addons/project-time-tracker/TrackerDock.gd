@@ -3,8 +3,10 @@ extends Control
 
 
 # Node references
-@onready var status_label : Label = $Margin/Layout/Status/StatusLabel
-@onready var status_value_label : Label = $Margin/Layout/Status/StatusValue
+@onready var status_label: Label = $Margin/Layout/Status/StatusLabel
+@onready var status_value: Label = $Margin/Layout/Status/StatusValue
+@onready var dhms_value: Label = $Margin/Layout/Status/DHMSValue
+@onready var hours_value: Label = $Margin/Layout/Status/HoursValue
 @onready var pause_button : Button = $Margin/Layout/Controls/PauseButton
 @onready var resume_button : Button = $Margin/Layout/Controls/ResumeButton
 @onready var clear_button : Button = $Margin/Layout/Status/ClearButton
@@ -67,12 +69,21 @@ func _process(delta: float) -> void:
 			time_elapsed += _tracker_sections[section]
 	
 	_tracker_sections["Editor"] = time_elapsed
-	var days = floori(_tracker_sections["Editor"]) / 60 / 60 / 24
-	var hours = floori(_tracker_sections["Editor"]) / 60 / 60
-	status_value_label.text = "Working for: " + str(days) + "d - " + Time.get_time_string_from_unix_time(_tracker_sections["Editor"]) + " (" + str(hours) + "h)"
+	_update_values("Working")
 
 
 # Helpers
+func _update_values(status : String):
+	status_value.text = status
+	
+	var dhms = floori(_tracker_sections["Editor"]) / 60 / 60 / 24
+	dhms_value.text = str(dhms) + "d - " + Time.get_time_string_from_unix_time(_tracker_sections["Editor"])
+	
+	var hours = floori(_tracker_sections["Editor"]) / 60 / 60
+	hours_value.text = "(" + str(hours) + "h)"
+	
+
+
 func _update_theme() -> void:
 	if (!Engine.is_editor_hint || !is_inside_tree()):
 		return
@@ -133,11 +144,8 @@ func _pause_tracking() -> void:
 func _disable_tracking(reason : String) -> void:
 	if (_create_section(_tracker_main_view)):
 		var elapsed_time = Time.get_unix_time_from_system() - _tracker_started
-		_tracker_sections[_tracker_main_view] += elapsed_time
-		var days = floori(_tracker_sections["Editor"]) / 60 / 60 / 24
-		var hours = floori(_tracker_sections["Editor"]) / 60 / 60
-		status_value_label.text = reason + ": " + str(days) + "d - " + Time.get_time_string_from_unix_time(_tracker_sections["Editor"]) + " (" + str(hours) + "h)"
-
+		_tracker_sections[_tracker_main_view] += elapsed_time	
+		_update_values(reason)
 
 
 # Properties
