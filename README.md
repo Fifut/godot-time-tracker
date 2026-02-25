@@ -14,6 +14,7 @@ A small editor widget which provides basic functions for tracking your time with
 - Stops tracking after a customizable period of inactivity and resumes automatically (AFK management)
 	- Editable in project settings
 - Counts time as "External" when godot is not focused (for users that use external code editor)
+	- Editable in project settings
 - Sections and bar chart can be hide separately
 	- Editable in project settings
 - Timers are saved each time a scene or script is saved
@@ -22,6 +23,7 @@ A small editor widget which provides basic functions for tracking your time with
 ## Update
 
 ### v2.0.6
+- Godot 4.6
 - New icon
 - Now handle floating windows
 - AFK handle floating windows
@@ -36,7 +38,7 @@ A small editor widget which provides basic functions for tracking your time with
 - Add project settings to define AFK timer (in seconds)
 
 ### v2.0.4
-- Gogot 4.4
+- Godot 4.4
 - Add section for Game
 - Add total hours in main timer
 - Fix: Popup menus count as “external” [#5](https://github.com/Fifut/godot-time-tracker/issues/5)
@@ -60,6 +62,5 @@ Available from AssetLib within the Editor: https://godotengine.org/asset-library
 Or clone/download this repository and put `addons/project-time-tracker` folder inside your project folder.
 
 
-
+## Credit
 Fork of [Godot Time Traker](https://github.com/YuriSizov/godot-time-tracker) by [YuriSizov](https://github.com/YuriSizov)
-Developed in and tested against Godot 4.6
