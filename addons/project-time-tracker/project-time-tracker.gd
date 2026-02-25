@@ -1,13 +1,13 @@
 @tool
 extends EditorPlugin
 
+
 const STORED_SECTIONS_PATH : String = "res://project_time_traker.json"
 
 var _dock_instance : Control
 var _timer_afk : Timer
 
 var _main_screen : String = "3D"
-var _focus_lost : bool = false
 
 
 func _enter_tree():
@@ -29,6 +29,15 @@ func _enter_tree():
 			"hint": PROPERTY_HINT_NONE,
 		})
 		
+	key = "project_time_traker/sections/use_external"
+	if not ProjectSettings.has_setting(key):
+		ProjectSettings.set_setting(key, true)
+		ProjectSettings.add_property_info({
+			"name": key,
+			"type": TYPE_BOOL,
+			"hint": PROPERTY_HINT_NONE,
+		})
+		
 	key = "project_time_traker/afk/afk_timer"
 	if not ProjectSettings.has_setting(key):
 		ProjectSettings.set_setting(key, 300)
@@ -37,13 +46,21 @@ func _enter_tree():
 			"type": TYPE_INT,
 			"hint": PROPERTY_HINT_NONE,
 		})
+			
+	key = "project_time_traker/afk/use_afk"
+	if not ProjectSettings.has_setting(key):
+		ProjectSettings.set_setting(key, true)
+		ProjectSettings.add_property_info({
+			"name": key,
+			"type": TYPE_BOOL,
+			"hint": PROPERTY_HINT_NONE,
+		})
 		
 	_timer_afk = Timer.new()
 	_timer_afk.wait_time = ProjectSettings.get_setting("project_time_traker/afk/afk_timer", 300)
-	_timer_afk.autostart = true
 	_timer_afk.one_shot = true
 	_timer_afk.timeout.connect(_on_timer_afk_timeout)
-	add_child(_timer_afk)
+	add_child(_timer_afk)	
 	
 	_dock_instance = preload("res://addons/project-time-tracker/TrackerDock.tscn").instantiate()
 	_dock_instance.name = "Project Time Tracker"
@@ -59,7 +76,12 @@ func _ready() -> void:
 	ProjectSettings.settings_changed.connect(
 	func():
 		_timer_afk.wait_time = ProjectSettings.get_setting("project_time_traker/afk/afk_timer", 300)
+		
+		if not ProjectSettings.get_setting("project_time_traker/afk/use_afk", true):
+			_timer_afk.stop()
 	)
+	
+	
 
 func _exit_tree():
 	remove_control_from_docks(_dock_instance)
@@ -129,30 +151,27 @@ func _on_timer_afk_timeout() -> void:
 		_dock_instance.set_main_view("AFK")
 
 
-func _input(event):
-	if (_dock_instance && is_instance_valid(_dock_instance)):
-		if event:
-			_dock_instance.set_main_view(_main_screen)
-			_timer_afk.start()
-
-
 func _process(delta):
 	if (_dock_instance && is_instance_valid(_dock_instance)):
 		
-		# Project running
 		if EditorInterface.is_playing_scene():
 			_dock_instance.set_main_view("Game")
 			return
+
+
+		var window = Window.get_focused_window()
+		if not window and ProjectSettings.get_setting("project_time_traker/sections/use_external", true):
+			_dock_instance.set_main_view("External")
+			return
 		
-		# Godot windows focused
-		for id in DisplayServer.get_window_list():
-			if DisplayServer.window_is_focused(id):
-				if _focus_lost:
-					_dock_instance.set_main_view(_main_screen)
-					_focus_lost = false	
-				return
-		
-		# Godot not focused
-		_dock_instance.set_main_view("External")
-		_timer_afk.stop()
-		_focus_lost = true
+		if not window.window_input.has_connections():
+			window.window_input.connect(
+				func(event):
+					if window.title.begins_with("Script Editor"):
+						_dock_instance.set_main_view("Script")
+					else:
+						_dock_instance.set_main_view(_main_screen)
+					
+					if ProjectSettings.get_setting("project_time_traker/afk/use_afk", true):
+						_timer_afk.start()
+			)

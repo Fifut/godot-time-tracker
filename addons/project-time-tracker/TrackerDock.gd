@@ -187,7 +187,7 @@ func _set_active_tracking(tracking: bool) -> void:
 
 func restore_tracked_sections(sections : Dictionary) -> void:
 	for section in sections:
-		if (section != "Editor" and section != "AFK"):
+		if (section != "Editor"):
 			_create_section(section)
 		_tracker_sections[section] = sections[section]
 	_update_sections()
