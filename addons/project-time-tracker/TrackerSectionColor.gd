@@ -6,9 +6,9 @@ func _process(delta: float) -> void:
 	if (!Engine.is_editor_hint || !is_inside_tree()):
 		return
 		
-	var percent = floor(size_flags_stretch_ratio * 100)
+	var percent = floori(size_flags_stretch_ratio * 100)
 		
-	if (percent >= 10):
+	if (percent >= 5):
 		$Percent.text = str(percent) + "%"
 	else:
 		$Percent.text = ""
