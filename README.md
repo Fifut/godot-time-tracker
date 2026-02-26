@@ -22,13 +22,17 @@ A small editor widget which provides basic functions for tracking your time with
 
 ## Update
 
-### v2.0.6
+### v2.0.6 IN PROGRESS !!!
 - Godot 4.6
 - New icon
 - Now handle floating windows
 - AFK handle floating windows
 - Add project settings to use or not External
 - Add project settings to use or not AFK
+- Add button to show and hide trash icons
+- Add button to edit sections times
+- Custom icons sections
+- Visual enhancements
 
 ### v2.0.5
 - Fix: Counts being in the embeded game mode as 'external' [#4](https://github.com/Fifut/godot-time-tracker/issues/4)

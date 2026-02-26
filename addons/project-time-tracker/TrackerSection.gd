@@ -23,14 +23,16 @@ signal on_edit_button_pressed(section_name)
 	set(value) :
 		section_color = value
 		_update_icon()
+		
+@export var section_icon : String = "" :
+	set(value) :
+		section_icon = value
+		_update_icon()
 	
 @export var elapsed_time : int = 0 :
 	set(value) :
 		elapsed_time = value
 		_update_elapsed_time()
-
-# Private properties
-var _section_icon : Texture
 
 
 func _ready() -> void:
@@ -54,16 +56,6 @@ func _update_theme() -> void:
 	if (!Engine.is_editor_hint || !is_inside_tree()):
 		return
 	
-	match section_name:
-		"2D": _section_icon = get_theme_icon("2D", "EditorIcons")
-		"3D": _section_icon = get_theme_icon("3D", "EditorIcons")
-		"Script": _section_icon = get_theme_icon("Script", "EditorIcons")
-		"Game": _section_icon = get_theme_icon("Game", "EditorIcons")
-		"AssetLib": _section_icon = get_theme_icon("AssetLib", "EditorIcons")
-		"External": _section_icon = get_theme_icon("Window", "EditorIcons")
-		"AFK": _section_icon = get_theme_icon("ViewportSpeed", "EditorIcons")
-		_: _section_icon = get_theme_icon("Node", "EditorIcons")
-		
 	edit_button.icon = get_theme_icon("EditAddRemove", "EditorIcons")
 	clear_button.icon = get_theme_icon("Remove", "EditorIcons")
 
@@ -72,7 +64,7 @@ func _update_icon() -> void:
 	if (!is_inside_tree()):
 		return
 	
-	icon_texture.texture = _section_icon
+	icon_texture.texture = get_theme_icon(section_icon, "EditorIcons")
 	icon_texture.modulate = section_color
 
 

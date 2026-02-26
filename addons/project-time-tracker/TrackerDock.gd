@@ -3,14 +3,14 @@ extends Control
 
 
 # Node references
-@onready var status_label: Label = $Margin/Layout/Status/StatusLabel
-@onready var status_value: Label = $Margin/Layout/Status/StatusValue
+@onready var icon_texture: TextureRect = $Margin/Layout/Status/IconTexture
 @onready var dhms_value: Label = $Margin/Layout/Status/DHMSValue
 @onready var hours_value: Label = $Margin/Layout/Status/HoursValue
+@onready var resume_button : Button = $Margin/Layout/Status/ResumeButton
+@onready var pause_button : Button = $Margin/Layout/Status/PauseButton
 @onready var clear_button : Button = $Margin/Layout/Status/ClearButton
-@onready var pause_button : Button = $Margin/Layout/Controls/PauseButton
-@onready var resume_button : Button = $Margin/Layout/Controls/ResumeButton
-@onready var edit_button: Button = $Margin/Layout/Controls/EditButton
+@onready var edit_button: Button = $Margin/Layout/Status/EditButton
+@onready var h_separator: HSeparator = $Margin/Layout/HSeparator
 @onready var section_list : Control = $Margin/Layout/SectionList
 @onready var section_graph : Control = $Margin/Layout/SectionGraph
 @onready var clear_confirm_dialog : ConfirmationDialog = $ClearConfirmDialog
@@ -45,6 +45,17 @@ var _section_colors : Dictionary = {
 	"External": Color.MEDIUM_PURPLE,
 	"AFK": Color.GRAY,
 	"default": Color.WHITE
+}
+
+var _section_icons : Dictionary = {
+	"2D": "2D",
+	"3D": "3D",
+	"Script": "Script",
+	"Game": "Game",
+	"AssetLib": "AssetLib",
+	"External": "Window",
+	"AFK": "ViewportSpeed",
+	"default": "Node"
 }
 
 
@@ -83,7 +94,17 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	section_list.visible = _show_sections
 	section_graph.visible = _show_graphs
+	h_separator.visible = (_show_sections or _show_graphs)
 	
+	# _tracker_main_view is empty half the time! WTF???
+	if not _tracker_main_view.is_empty():
+		icon_texture.self_modulate = _section_colors[_tracker_main_view]
+		
+		if _section_icons.has(_tracker_main_view):
+			icon_texture.texture = get_theme_icon(_section_icons[_tracker_main_view], "EditorIcons").duplicate()
+		else:
+			icon_texture.texture = get_theme_icon(_section_icons["default"], "EditorIcons").duplicate()
+		
 	if (!_active_tracking):
 		return
 	
@@ -98,8 +119,6 @@ func _process(delta: float) -> void:
 
 # Helpers
 func _update_values(status : String):
-	status_value.text = status
-	
 	var dhms = floori(_tracker_sections["Editor"]) / 60 / 60 / 24
 	dhms_value.text = str(dhms) + "d - " + Time.get_time_string_from_unix_time(_tracker_sections["Editor"])
 	
@@ -113,10 +132,9 @@ func _update_theme() -> void:
 		return
 	
 	pause_button.icon = get_theme_icon("Pause", "EditorIcons")
-	resume_button.icon = get_theme_icon("PlayStart", "EditorIcons")
+	resume_button.icon = get_theme_icon("Play", "EditorIcons")
 	clear_button.icon = get_theme_icon("Remove", "EditorIcons")
 	edit_button.icon = get_theme_icon("Modifiers", "EditorIcons") 
-	status_label.add_theme_color_override("font_color", get_theme_color("contrast_color_2", "Editor"))
 
 
 func _create_section(section_name: String) -> bool:
@@ -134,10 +152,17 @@ func _create_section(section_name: String) -> bool:
 	new_section.section_name = section_name
 	new_section.on_clear_button_pressed.connect(_on_clear_section_requested)
 	new_section.on_edit_button_pressed.connect(_on_edit_section_requested)
+	
 	if _section_colors.has(section_name):
 		new_section.section_color = _section_colors[section_name]
 	else:
 		new_section.section_color = _section_colors["default"]
+	
+	if _section_icons.has(section_name):
+		new_section.section_icon = _section_icons[section_name]
+	else:
+		new_section.section_icon = _section_icons["default"]
+		
 	section_list.add_child(new_section)
 	
 	_tracker_sections[section_name] = 0
@@ -193,11 +218,11 @@ func _set_active_tracking(tracking: bool) -> void:
 	_active_tracking = tracking
 	
 	if (_active_tracking):
-		pause_button.disabled = false
-		resume_button.disabled = true
+		pause_button.visible = true
+		resume_button.visible = false
 	else:
-		pause_button.disabled = true
-		resume_button.disabled = false
+		pause_button.visible = false
+		resume_button.visible = true
 
 
 func restore_tracked_sections(sections : Dictionary) -> void:

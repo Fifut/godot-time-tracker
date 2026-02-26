@@ -8,7 +8,9 @@ func _process(delta: float) -> void:
 		
 	var percent = floori(size_flags_stretch_ratio * 100)
 		
-	if (percent >= 5):
+	if percent >= 10:
 		$Percent.text = str(percent) + "%"
+	elif percent >= 5:
+		$Percent.text = str(percent)
 	else:
 		$Percent.text = ""

@@ -4,6 +4,10 @@
 [ext_resource type="Script" uid="uid://b4k026cqprqn" path="res://addons/project-time-tracker/SectionGraph.gd" id="2_0xje5"]
 [ext_resource type="FontFile" uid="uid://ojqgt2hcmgi6" path="res://addons/project-time-tracker/NotoSans-Regular.ttf" id="2_uwii8"]
 
+[sub_resource type="DPITexture" id="DPITexture_3cuot"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><path fill=\"#ff5d5d\" d=\"M2 1v8.586l1.293-1.293a1 1 0 0 1 1.414 0L7 10.587l2.293-2.293a1 1 0 0 1 1.414 0L13 10.586l1-1V6H9V1H2zm8 0v4h4zm-6 9.414-2 2V15h12v-2.586l-.293.293a1 1 0 0 1-1.414 0L10 10.414l-2.293 2.293a1 1 0 0 1-1.414 0L4 10.414z\"/></svg>
+"
+
 [sub_resource type="DPITexture" id="DPITexture_uwii8"]
 _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><path fill=\"#ff5d5d\" d=\"M2 1v8.586l1.293-1.293a1 1 0 0 1 1.414 0L7 10.587l2.293-2.293a1 1 0 0 1 1.414 0L13 10.586l1-1V6H9V1H2zm8 0v4h4zm-6 9.414-2 2V15h12v-2.586l-.293.293a1 1 0 0 1-1.414 0L10 10.414l-2.293 2.293a1 1 0 0 1-1.414 0L4 10.414z\"/></svg>
 "
@@ -24,17 +28,13 @@ layout_mode = 2
 [node name="Status" type="HBoxContainer" parent="Margin/Layout" unique_id=822005780]
 layout_mode = 2
 
-[node name="StatusLabel" type="Label" parent="Margin/Layout/Status" unique_id=842198859]
+[node name="IconTexture" type="TextureRect" parent="Margin/Layout/Status" unique_id=2081503847]
+self_modulate = Color(0, 0.7490196, 1, 1)
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_fonts/font = ExtResource("2_uwii8")
-text = "Status:"
-
-[node name="StatusValue" type="Label" parent="Margin/Layout/Status" unique_id=968727173]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_fonts/font = ExtResource("2_uwii8")
-text = "Working"
+texture = SubResource("DPITexture_3cuot")
+expand_mode = 1
+stretch_mode = 4
 
 [node name="DHMSValue" type="Label" parent="Margin/Layout/Status" unique_id=296369054]
 layout_mode = 2
@@ -49,46 +49,40 @@ theme_override_fonts/font = ExtResource("2_uwii8")
 text = "(0h)"
 horizontal_alignment = 2
 
+[node name="ResumeButton" type="Button" parent="Margin/Layout/Status" unique_id=1922396438]
+visible = false
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_uwii8")
+icon = SubResource("DPITexture_uwii8")
+icon_alignment = 1
+
+[node name="PauseButton" type="Button" parent="Margin/Layout/Status" unique_id=2078160439]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_uwii8")
+icon = SubResource("DPITexture_uwii8")
+icon_alignment = 1
+
 [node name="ClearButton" type="Button" parent="Margin/Layout/Status" unique_id=1572265573]
 visible = false
 layout_mode = 2
 icon = SubResource("DPITexture_uwii8")
 flat = true
 
-[node name="Padding1" type="Control" parent="Margin/Layout" unique_id=908196514]
-layout_mode = 2
-
-[node name="Controls" type="HBoxContainer" parent="Margin/Layout" unique_id=1939215233]
-layout_mode = 2
-
-[node name="ResumeButton" type="Button" parent="Margin/Layout/Controls" unique_id=1922396438]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_fonts/font = ExtResource("2_uwii8")
-disabled = true
-text = "Resume"
-icon = SubResource("DPITexture_uwii8")
-
-[node name="PauseButton" type="Button" parent="Margin/Layout/Controls" unique_id=2078160439]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_fonts/font = ExtResource("2_uwii8")
-text = "Pause"
-icon = SubResource("DPITexture_uwii8")
-
-[node name="EditButton" type="Button" parent="Margin/Layout/Controls" unique_id=212571990]
+[node name="EditButton" type="Button" parent="Margin/Layout/Status" unique_id=212571990]
 layout_mode = 2
 toggle_mode = true
 icon = SubResource("DPITexture_uwii8")
 flat = true
 
-[node name="Padding2" type="Control" parent="Margin/Layout" unique_id=1955428064]
+[node name="HSeparator" type="HSeparator" parent="Margin/Layout" unique_id=508973525]
 layout_mode = 2
 
 [node name="SectionList" type="VBoxContainer" parent="Margin/Layout" unique_id=132359488]
 layout_mode = 2
 
-[node name="Padding3" type="Control" parent="Margin/Layout" unique_id=1528690914]
+[node name="Padding" type="Control" parent="Margin/Layout" unique_id=908196514]
 layout_mode = 2
 
 [node name="SectionGraph" type="HBoxContainer" parent="Margin/Layout" unique_id=2028078613]
