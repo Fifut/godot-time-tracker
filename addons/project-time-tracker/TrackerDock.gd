@@ -7,14 +7,24 @@ extends Control
 @onready var status_value: Label = $Margin/Layout/Status/StatusValue
 @onready var dhms_value: Label = $Margin/Layout/Status/DHMSValue
 @onready var hours_value: Label = $Margin/Layout/Status/HoursValue
+@onready var clear_button : Button = $Margin/Layout/Status/ClearButton
 @onready var pause_button : Button = $Margin/Layout/Controls/PauseButton
 @onready var resume_button : Button = $Margin/Layout/Controls/ResumeButton
-@onready var clear_button : Button = $Margin/Layout/Status/ClearButton
+@onready var edit_button: Button = $Margin/Layout/Controls/EditButton
 @onready var section_list : Control = $Margin/Layout/SectionList
 @onready var section_graph : Control = $Margin/Layout/SectionGraph
 @onready var clear_confirm_dialog : ConfirmationDialog = $ClearConfirmDialog
 @onready var clear_section_confirm_dialog : ConfirmationDialog = $ClearSectionConfirmDialog
+@onready var edit_section_window: Window = $EditSectionWindow
 @onready var timer_update : Timer = $TimerUpdate
+
+@onready var title_label: Label = $EditSectionWindow/PanelContainer/VBoxContainer/TitleLabel
+@onready var days_spin_box: SpinBox = $EditSectionWindow/PanelContainer/VBoxContainer/SpinBoxHBoxContainer/DaysHBoxContainer/DaysSpinBox
+@onready var hour_spin_box: SpinBox = $EditSectionWindow/PanelContainer/VBoxContainer/SpinBoxHBoxContainer/HoursHBoxContainer/HourSpinBox
+@onready var minutes_spin_box: SpinBox = $EditSectionWindow/PanelContainer/VBoxContainer/SpinBoxHBoxContainer/MinutesHBoxContainer/MinutesSpinBox
+@onready var seconds_spin_box: SpinBox = $EditSectionWindow/PanelContainer/VBoxContainer/SpinBoxHBoxContainer/SecondsHBoxContainer2/SecondsSpinBox
+@onready var ok_button: Button = $EditSectionWindow/PanelContainer/VBoxContainer/ButtonsHBoxContainer/OKButton
+@onready var cancel_button: Button = $EditSectionWindow/PanelContainer/VBoxContainer/ButtonsHBoxContainer/CancelButton
 
 
 # Private properties
@@ -56,9 +66,12 @@ func _ready() -> void:
 	pause_button.pressed.connect(_pause_tracking)
 	resume_button.pressed.connect(_resume_tracking)
 	clear_button.pressed.connect(_on_clear_records_requested)
+	edit_button.toggled.connect(_on_edit_requested)
 	clear_confirm_dialog.confirmed.connect(_on_clear_records_confirmed)
 	clear_section_confirm_dialog.confirmed.connect(_on_clear_section_confirmed)
 	timer_update.timeout.connect(_on_timer_update_timeout)
+	ok_button.pressed.connect(_on_ok_requested)
+	cancel_button.pressed.connect(_on_cancel_requested)
 	
 	_tracker_started = Time.get_unix_time_from_system()
 	
@@ -102,6 +115,7 @@ func _update_theme() -> void:
 	pause_button.icon = get_theme_icon("Pause", "EditorIcons")
 	resume_button.icon = get_theme_icon("PlayStart", "EditorIcons")
 	clear_button.icon = get_theme_icon("Remove", "EditorIcons")
+	edit_button.icon = get_theme_icon("Modifiers", "EditorIcons") 
 	status_label.add_theme_color_override("font_color", get_theme_color("contrast_color_2", "Editor"))
 
 
@@ -119,6 +133,7 @@ func _create_section(section_name: String) -> bool:
 	new_section.name = section_name
 	new_section.section_name = section_name
 	new_section.on_clear_button_pressed.connect(_on_clear_section_requested)
+	new_section.on_edit_button_pressed.connect(_on_edit_section_requested)
 	if _section_colors.has(section_name):
 		new_section.section_color = _section_colors[section_name]
 	else:
@@ -207,7 +222,14 @@ func _on_clear_records_confirmed() -> void:
 	for child_node in section_list.get_children():
 		section_list.remove_child(child_node)
 		child_node.queue_free()
+	edit_button.button_pressed = false
 	section_graph.clear()
+
+
+func _on_edit_requested(toggled_on: bool) -> void:
+	clear_button.visible = toggled_on
+	for child_node in section_list.get_children():
+		child_node.clear_button_visibility(toggled_on)
 
 
 func _on_timer_update_timeout():
@@ -234,6 +256,37 @@ func _on_clear_section_confirmed():
 	section_list.remove_child(child_node)
 	child_node.queue_free()
 	
+	edit_button.button_pressed = false
 	_section_to_remove = ""
 	section_graph.clear()
 	_update_sections()
+
+
+func _on_edit_section_requested(section_name):
+	var time = Time.get_time_dict_from_unix_time(_tracker_sections[section_name])
+	
+	title_label.text = section_name
+	days_spin_box.value = floori(_tracker_sections[section_name]) / 60 / 60 / 24
+	hour_spin_box.value = floori(time["hour"] % 24)
+	minutes_spin_box.value = time["minute"]
+	seconds_spin_box.value = time["second"]
+	
+	edit_section_window.show()
+	
+
+func _on_ok_requested():
+	var time = 0.0
+	time += days_spin_box.value * 24 * 60 * 60
+	time += hour_spin_box.value * 60 * 60
+	time += minutes_spin_box.value * 60
+	time += seconds_spin_box.value
+	_tracker_sections[title_label.text] = time
+	
+	edit_button.button_pressed = false
+	edit_section_window.hide()
+	
+	
+func _on_cancel_requested():
+	edit_button.button_pressed = false
+	edit_section_window.hide()
+	
