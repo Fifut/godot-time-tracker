@@ -36,16 +36,6 @@ var _section_to_remove : String = ""
 var _show_sections : bool = true
 var _show_graphs : bool = true
 
-var _section_colors : Dictionary = {
-	"2D": Color.DEEP_SKY_BLUE,
-	"3D": Color.CORAL,
-	"Script": Color.YELLOW,
-	"Game": Color.FIREBRICK,
-	"AssetLib": Color.MEDIUM_SEA_GREEN,
-	"External": Color.MEDIUM_PURPLE,
-	"AFK": Color.GRAY,
-	"default": Color.WHITE
-}
 
 var _section_icons : Dictionary = {
 	"2D": "2D",
@@ -68,11 +58,14 @@ func _ready() -> void:
 		func():
 			_show_sections = ProjectSettings.get_setting("project_time_traker/sections/show_sections", true)
 			_show_graphs = ProjectSettings.get_setting("project_time_traker/sections/show_graphs", true)
+			
+			for section in _tracker_sections:
+				var node = section_list.get_node_or_null(section)
+				if (node):
+					node.section_color = ProjectSettings.get_setting("project_time_traker/sections/colors/" + section, ProjectSettings.get_setting("project_time_traker/sections/colors/other", Color.WHITE))
 	)
 	
 	_update_theme()
-	
-	section_graph.section_colors = _section_colors
 	
 	pause_button.pressed.connect(_pause_tracking)
 	resume_button.pressed.connect(_resume_tracking)
@@ -98,12 +91,12 @@ func _process(delta: float) -> void:
 	
 	# _tracker_main_view is empty half the time! WTF???
 	if not _tracker_main_view.is_empty():
-		icon_texture.self_modulate = _section_colors[_tracker_main_view]
+		icon_texture.self_modulate = ProjectSettings.get_setting("project_time_traker/sections/colors/" + _tracker_main_view, ProjectSettings.get_setting("project_time_traker/sections/colors/other", Color.WHITE))
 		
 		if _section_icons.has(_tracker_main_view):
-			icon_texture.texture = get_theme_icon(_section_icons[_tracker_main_view], "EditorIcons").duplicate()
+			icon_texture.texture = get_theme_icon(_section_icons[_tracker_main_view], "EditorIcons")
 		else:
-			icon_texture.texture = get_theme_icon(_section_icons["default"], "EditorIcons").duplicate()
+			icon_texture.texture = get_theme_icon(_section_icons["default"], "EditorIcons")
 		
 	if (!_active_tracking):
 		return
@@ -152,12 +145,8 @@ func _create_section(section_name: String) -> bool:
 	new_section.section_name = section_name
 	new_section.on_clear_button_pressed.connect(_on_clear_section_requested)
 	new_section.on_edit_button_pressed.connect(_on_edit_section_requested)
-	
-	if _section_colors.has(section_name):
-		new_section.section_color = _section_colors[section_name]
-	else:
-		new_section.section_color = _section_colors["default"]
-	
+	new_section.section_color = ProjectSettings.get_setting("project_time_traker/sections/colors/" + section_name, ProjectSettings.get_setting("project_time_traker/sections/color/other", Color.WHITE))
+
 	if _section_icons.has(section_name):
 		new_section.section_icon = _section_icons[section_name]
 	else:

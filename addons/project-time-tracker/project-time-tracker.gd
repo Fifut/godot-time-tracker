@@ -19,6 +19,7 @@ func _enter_tree():
 			"type": TYPE_BOOL,
 			"hint": PROPERTY_HINT_NONE,
 		})
+	ProjectSettings.set_initial_value(key, true)
 	
 	key = "project_time_traker/sections/show_graphs"
 	if not ProjectSettings.has_setting(key):
@@ -28,15 +29,97 @@ func _enter_tree():
 			"type": TYPE_BOOL,
 			"hint": PROPERTY_HINT_NONE,
 		})
+	ProjectSettings.set_initial_value(key, true)
 		
 	key = "project_time_traker/sections/use_external"
 	if not ProjectSettings.has_setting(key):
-		ProjectSettings.set_setting(key, true)
+		ProjectSettings.set_setting(key, false)
 		ProjectSettings.add_property_info({
 			"name": key,
 			"type": TYPE_BOOL,
 			"hint": PROPERTY_HINT_NONE,
 		})
+	ProjectSettings.set_initial_value(key, false)
+	
+	key = "project_time_traker/sections/colors/2D"
+	if not ProjectSettings.has_setting(key):
+		ProjectSettings.set_setting(key, Color.DEEP_SKY_BLUE)
+		ProjectSettings.add_property_info({
+			"name": key,
+			"type": TYPE_COLOR,
+			"hint": PROPERTY_HINT_NONE,
+		})	
+	ProjectSettings.set_initial_value(key, Color.DEEP_SKY_BLUE)
+	
+	key = "project_time_traker/sections/colors/3D"
+	if not ProjectSettings.has_setting(key):
+		ProjectSettings.set_setting(key, Color.CORAL)
+		ProjectSettings.add_property_info({
+			"name": key,
+			"type": TYPE_COLOR,
+			"hint": PROPERTY_HINT_NONE,
+		})	
+	ProjectSettings.set_initial_value(key, Color.CORAL)
+	
+	key = "project_time_traker/sections/colors/Script"
+	if not ProjectSettings.has_setting(key):
+		ProjectSettings.set_setting(key, Color.YELLOW)
+		ProjectSettings.add_property_info({
+			"name": key,
+			"type": TYPE_COLOR,
+			"hint": PROPERTY_HINT_NONE,
+		})	
+	ProjectSettings.set_initial_value(key, Color.YELLOW)
+		
+	key = "project_time_traker/sections/colors/Game"
+	if not ProjectSettings.has_setting(key):
+		ProjectSettings.set_setting(key, Color.FIREBRICK)
+		ProjectSettings.add_property_info({
+			"name": key,
+			"type": TYPE_COLOR,
+			"hint": PROPERTY_HINT_NONE,
+		})	
+	ProjectSettings.set_initial_value(key, Color.FIREBRICK)
+	
+	key = "project_time_traker/sections/colors/AssetLib"
+	if not ProjectSettings.has_setting(key):
+		ProjectSettings.set_setting(key, Color.MEDIUM_SEA_GREEN)
+		ProjectSettings.add_property_info({
+			"name": key,
+			"type": TYPE_COLOR,
+			"hint": PROPERTY_HINT_NONE,
+		})		
+	ProjectSettings.set_initial_value(key, Color.MEDIUM_SEA_GREEN)
+	
+	key = "project_time_traker/sections/colors/External"
+	if not ProjectSettings.has_setting(key):
+		ProjectSettings.set_setting(key, Color.MEDIUM_PURPLE)
+		ProjectSettings.add_property_info({
+			"name": key,
+			"type": TYPE_COLOR,
+			"hint": PROPERTY_HINT_NONE,
+		})
+	ProjectSettings.set_initial_value(key, Color.MEDIUM_PURPLE)
+		
+	key = "project_time_traker/sections/colors/AFK"
+	if not ProjectSettings.has_setting(key):
+		ProjectSettings.set_setting(key, Color.GRAY)
+		ProjectSettings.add_property_info({
+			"name": key,
+			"type": TYPE_COLOR,
+			"hint": PROPERTY_HINT_NONE,
+		})
+	ProjectSettings.set_initial_value(key, Color.GRAY)
+	
+	key = "project_time_traker/sections/colors/Other"
+	if not ProjectSettings.has_setting(key):
+		ProjectSettings.set_setting(key, Color.WHITE)
+		ProjectSettings.add_property_info({
+			"name": key,
+			"type": TYPE_COLOR,
+			"hint": PROPERTY_HINT_NONE,
+		})
+	ProjectSettings.set_initial_value(key, Color.WHITE)
 		
 	key = "project_time_traker/afk/afk_timer"
 	if not ProjectSettings.has_setting(key):
@@ -46,6 +129,7 @@ func _enter_tree():
 			"type": TYPE_INT,
 			"hint": PROPERTY_HINT_NONE,
 		})
+	ProjectSettings.set_initial_value(key, 300)
 			
 	key = "project_time_traker/afk/use_afk"
 	if not ProjectSettings.has_setting(key):
@@ -55,6 +139,7 @@ func _enter_tree():
 			"type": TYPE_BOOL,
 			"hint": PROPERTY_HINT_NONE,
 		})
+	ProjectSettings.set_initial_value(key, true)
 		
 	_timer_afk = Timer.new()
 	_timer_afk.wait_time = ProjectSettings.get_setting("project_time_traker/afk/afk_timer", 300)
@@ -80,7 +165,6 @@ func _ready() -> void:
 		if not ProjectSettings.get_setting("project_time_traker/afk/use_afk", true):
 			_timer_afk.stop()
 	)
-	
 	
 
 func _exit_tree():

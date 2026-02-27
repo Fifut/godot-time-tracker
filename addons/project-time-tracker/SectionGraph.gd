@@ -2,10 +2,6 @@
 extends HBoxContainer
 
 
-# Public properties
-var section_colors : Dictionary = {}
-
-
 var sections : Dictionary = {}:
 	set(value):
 		sections = value
@@ -30,10 +26,7 @@ func _update_sections() -> void:
 		else:
 			var new_section = preload("res://addons/project-time-tracker/TrackerSectionColor.tscn").instantiate()
 			new_section.name = section
-			if section_colors.has(section):
-				new_section.color = section_colors[section]
-			else:
-				new_section.color = section_colors["default"]
+			new_section.color = ProjectSettings.get_setting("project_time_traker/sections/colors/" + section, ProjectSettings.get_setting("project_time_traker/sections/colors/other", Color.WHITE))
 			new_section.size_flags_stretch_ratio = floor(sections[section]) / floor(sections["Editor"])
 			add_child(new_section)
 
