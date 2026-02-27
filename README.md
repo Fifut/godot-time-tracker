@@ -22,13 +22,14 @@ A small editor widget which provides basic functions for tracking your time with
 
 ## Update
 
-### v2.0.6 IN PROGRESS !!!
+### v2.0.6
 - Godot 4.6
 - New icon
 - Now handle floating windows
 - AFK handle floating windows
 - Add project settings to use or not External
 - Add project settings to use or not AFK
+- Add project settings to custom sections color
 - Add button to show and hide trash icons
 - Add button to edit sections times
 - Custom icons sections
