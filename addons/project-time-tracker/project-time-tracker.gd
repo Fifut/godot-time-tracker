@@ -8,6 +8,7 @@ var _dock_instance : Control
 var _timer_afk : Timer
 
 var _main_screen : String = "3D"
+var _window : Window = null
 
 
 func _enter_tree():
@@ -161,10 +162,10 @@ func _ready() -> void:
 	ProjectSettings.settings_changed.connect(
 	func():
 		_timer_afk.wait_time = ProjectSettings.get_setting("project_time_traker/afk/afk_timer", 300)
-		
-		if not ProjectSettings.get_setting("project_time_traker/afk/use_afk", true):
-			_timer_afk.stop()
+		_set_afk_timer(true)
 	)
+	
+	_set_afk_timer(true)
 	
 
 func _exit_tree():
@@ -230,9 +231,27 @@ func _on_main_screen_changed(main_screen: String) -> void:
 		_main_screen = main_screen
 
 
+func _set_afk_timer(status: bool):
+	if status and ProjectSettings.get_setting("project_time_traker/afk/use_afk", true):
+		_timer_afk.start()
+	else:
+		_timer_afk.stop()
+		
 func _on_timer_afk_timeout() -> void:
 	if (_dock_instance && is_instance_valid(_dock_instance)):
 		_dock_instance.set_main_view("AFK")
+
+
+func _connected_window_input(event):
+	if not _window:
+		return
+		
+	if _window.title.begins_with("Script Editor"):
+		_dock_instance.set_main_view("Script")
+	else:
+		_dock_instance.set_main_view(_main_screen)	
+		
+	_set_afk_timer(true)
 
 
 func _process(delta):
@@ -240,22 +259,21 @@ func _process(delta):
 		
 		if EditorInterface.is_playing_scene():
 			_dock_instance.set_main_view("Game")
+			_set_afk_timer(true)
 			return
 
 
-		var window = Window.get_focused_window()
-		if not window and ProjectSettings.get_setting("project_time_traker/sections/use_external", true):
-			_dock_instance.set_main_view("External")
-			return
+		_window = Window.get_focused_window()
+		if not _window:
+			if ProjectSettings.get_setting("project_time_traker/sections/use_external", true):
+				_dock_instance.set_main_view("External")
+			else:
+				_dock_instance.pause_tracking()
+			_set_afk_timer(false)
 		
-		if not window.window_input.has_connections():
-			window.window_input.connect(
-				func(event):
-					if window.title.begins_with("Script Editor"):
-						_dock_instance.set_main_view("Script")
-					else:
-						_dock_instance.set_main_view(_main_screen)
-					
-					if ProjectSettings.get_setting("project_time_traker/afk/use_afk", true):
-						_timer_afk.start()
-			)
+		else:
+			_dock_instance.resume_tracking()
+
+			if not _window.window_input.is_connected(_connected_window_input):
+				_window.window_input.connect(_connected_window_input)
+		

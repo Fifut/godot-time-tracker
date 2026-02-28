@@ -22,6 +22,11 @@ A small editor widget which provides basic functions for tracking your time with
 
 ## Update
 
+### v2.0.7 -> IN PROGESS !!!
+- If use_external is not enabled, counters no longer counts when the window is not in focus
+- [#6](https://github.com/Fifut/godot-time-tracker/issues/6)
+- Fixed an issue where an external signal already connected to the window prevented the add-on signal from connecting
+
 ### v2.0.6
 - Godot 4.6
 - New icon

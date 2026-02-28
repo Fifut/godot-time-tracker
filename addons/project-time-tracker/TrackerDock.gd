@@ -107,11 +107,11 @@ func _process(delta: float) -> void:
 			time_elapsed += _tracker_sections[section]
 	
 	_tracker_sections["Editor"] = time_elapsed
-	_update_values("Working")
+	_update_values()
 
 
 # Helpers
-func _update_values(status : String):
+func _update_values():
 	var dhms = floori(_tracker_sections["Editor"]) / 60 / 60 / 24
 	dhms_value.text = str(dhms) + "d - " + Time.get_time_string_from_unix_time(_tracker_sections["Editor"])
 	
@@ -178,14 +178,25 @@ func _resume_tracking() -> void:
 
 func _pause_tracking() -> void:
 	_set_active_tracking(false)
-	_disable_tracking("Pause")
+	_disable_tracking()
 
 
-func _disable_tracking(reason : String) -> void:
+func resume_tracking() -> void:
+	if not _active_tracking:
+		_active_tracking = true
+		_tracker_started = Time.get_unix_time_from_system()
+	
+func pause_tracking() -> void:
+	if _active_tracking:
+		_active_tracking = false
+		_disable_tracking()
+
+
+func _disable_tracking() -> void:
 	if (_create_section(_tracker_main_view)):
 		var elapsed_time = Time.get_unix_time_from_system() - _tracker_started
 		_tracker_sections[_tracker_main_view] += elapsed_time	
-		_update_values(reason)
+		_update_values()
 
 
 # Properties
@@ -201,6 +212,9 @@ func set_main_view(view_name: String) -> void:
 		_tracker_started = Time.get_unix_time_from_system()
 	
 	_tracker_main_view = view_name
+
+func get_main_view() -> String:
+	return _tracker_main_view
 
 
 func _set_active_tracking(tracking: bool) -> void:

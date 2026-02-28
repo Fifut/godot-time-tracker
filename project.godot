@@ -23,12 +23,6 @@ config/icon="res://addons/project-time-tracker/icon.png"
 
 enabled=PackedStringArray("res://addons/project-time-tracker/plugin.cfg")
 
-[project_time_traker]
-
-sections/colors/2D=Color(1, 0.31666666, 0, 1)
-sections/colors/AFK=Color(0.7693, 0.13719998, 0.98, 0.4627451)
-afk/afk_timer=10
-
 [rendering]
 
 environment/default_environment="res://default_env.tres"
